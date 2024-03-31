@@ -35,8 +35,7 @@ class MCP4661Channel : public Component, public output::FloatOutput, public Pare
   friend class MCP4661Output;
 
   void write_state(float state) override;
-  void update_wiper_address(void) 
-    { wiper_address_ = MemoryAddress((is_volatile_?VOLATILE_WIPER_0:NON_VOLATILE_WIPER_0) + wiper_); }
+  void update_wiper_address(void);
 
   uint8_t wiper_;
   bool is_volatile_;

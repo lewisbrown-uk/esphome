@@ -10,7 +10,7 @@ static const char *const TAG = "mcp4661";
 
 void MCP4661Output::setup(void)
 {
-  ESP_LOGCONFIG(tag, "Setting up MCP4661");
+  ESP_LOGCONFIG(TAG, "Setting up MCP4661");
   // set up the MCP4661
   if ( this->number_of_bits_ == 8 )  
   {
@@ -25,7 +25,7 @@ void MCP4661Output::setup(void)
   else
   {
     // This is an error - should not be possible because of validation
-    ESP_LOGV(tag, "Invalid number of bits specifed: %01u", this->number_of_bits_);
+    ESP_LOGV(TAG, "Invalid number of bits specifed: %01u", this->number_of_bits_);
     assert(false); // TODO: throw an error properly
   }
 }
@@ -33,6 +33,7 @@ void MCP4661Output::setup(void)
 void MCP4661Output::dump_config(void)
 {
   // dump config
+  ESP_LOGCONFIG(TAG, );
 }
 
 void MCP4661Output::register_channel(MCP4661Channel *channel) {

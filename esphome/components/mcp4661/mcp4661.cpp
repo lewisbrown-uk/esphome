@@ -8,7 +8,6 @@ namespace mcp4661 {
 
 static const char *const TAG = "mcp4661";
 
-
 uint8_t MCP4661Output::construct_command_byte(MemoryAddress memory_address, Command command, uint16_t data)
 {
   return (memory_address << 4) | (command << 2) | ((data & 0x1ff) >> 8);

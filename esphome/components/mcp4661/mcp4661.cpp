@@ -36,7 +36,7 @@ void MCP4661Output::dump_config(void)
   ESP_LOGCONFIG(TAG, "MCP4661: bits = %01u, wiper_step_size = %f, wiper_value_max = %01u", 
     this->number_of_bits_, 
     this->wiper_step_size_,
-    this->wiper_value_max);
+    this->wiper_value_max_);
   ESP_LOGCONFIG(TAG, "         wiper channels = %01u", this->number_of_wipers_);
 }
 

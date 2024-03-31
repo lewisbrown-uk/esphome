@@ -28,7 +28,7 @@ class MCP4661Output;
 
 class MCP4661Channel : public Component, public output::FloatOutput, public Parented<MCP4661Output> {
  public:
-  void set_wiper(uint8_t wiper) { wiper_ = wiper; update_wiper_address(); }
+  void set_channel(uint8_t wiper) { wiper_ = wiper; update_wiper_address(); }
   void set_volatility(bool is_volatile) { is_volatile_ = is_volatile; update_wiper_address(); }
 
  protected:

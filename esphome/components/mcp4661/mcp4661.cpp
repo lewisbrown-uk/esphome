@@ -55,6 +55,7 @@ void MCP4661Output::set_wiper_value(MemoryAddress wiper_address, uint16_t wiper_
   uint8_t command_byte = construct_command_byte(wiper_address, Command::WRITE, wiper_value);
   uint8_t data_byte = wiper_value & 0xff;
 
+  this->write_byte(command_byte, data_byte);
 }
 
 void MCP4661Channel::write_state(float state)

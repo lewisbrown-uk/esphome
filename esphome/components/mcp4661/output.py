@@ -15,7 +15,7 @@ CONFIG_SCHEMA = output.FLOAT_OUTPUT_SCHEMA.extend(
         cv.Required(CONF_ID): cv.declare_id(MCP4661Channel),
         cv.GenerateID(CONF_MCP4661_ID): cv.use_id(MCP4661Output),
         cv.Required(CONF_CHANNEL): cv.int_range(min=0, max=1),
-        cv.Optional(CONF_VOLATILE, True): cv.boolean()
+        cv.Optional(CONF_VOLATILE, default=True): cv.boolean
     }
 )
 

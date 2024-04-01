@@ -7,8 +7,6 @@ from . import MCP4661Output, mcp4661_ns
 DEPENDENCIES = ["mcp4661"]
 
 MCP4661Channel = mcp4661_ns.class_("MCP4661Channel", output.FloatOutput)
-CONF_MCP4661_ID = "mcp4661_id"
-CONF_VOLATILE = "volatile"
 
 CONFIG_SCHEMA = output.FLOAT_OUTPUT_SCHEMA.extend(
     {

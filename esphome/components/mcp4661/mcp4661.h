@@ -53,13 +53,13 @@ class MCP4661SensorChannel : public MCP4661Channel, public PollingComponent, pub
     void update(void) override;
   
   protected:
-    Parented<MCP4661Component> * get_parented_ptr() { return static_cast<Parented<MCP4661Component> *> this; }
+    Parented<MCP4661Component> * get_parented_ptr() { return static_cast<Parented<MCP4661Component> *>(this); }
 };
 
 class MCP4661OutputChannel : public MCP4661Channel, public Component, public output::FloatOutput, public Parented<MCP4661Component> {
   protected:
     void write_state(float state) override;
-    Parented<MCP4661Component> * get_parented_ptr() { return static_cast<Parented<MCP4661Component> *> this; }
+    Parented<MCP4661Component> * get_parented_ptr() { return static_cast<Parented<MCP4661Component> *>(this); }
 };
 
 class MCP4661Component : public Component, public i2c::I2CDevice {

@@ -203,7 +203,7 @@ void MCP4661OutputChannel::write_state(float state) {
 void MCP4661SensorChannel::update(void) {
   if ( this->type_ == MCP4661SensorType::WIPER ) {
     uint16_t wiper_value = this->parent_->get_wiper_value(this->wiper_, this->is_volatile_);
-    this->publish_state(float(wiper_value) / this->parent_->wiper_max_value_);
+    this->publish_state(float(wiper_value) / this->parent_->wiper_value_max_);
   }
   else if ( this->type_ == MCP4661SensorType::MEMORY ) {
     uint16_t memory_value = this->parent_->get_memory_value(this->location_);

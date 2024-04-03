@@ -34,7 +34,7 @@ uint8_t MCP4661Component::construct_command_byte(uint8_t wiper, bool is_volatile
 
 void MCP4661Component::dump_config(void) {
   // dump config
-  ESP_LOGCONFIG(TAG, "MCP4661 config")
+  ESP_LOGCONFIG(TAG, "MCP4661 config");
 
   LOG_I2C_DEVICE(this);
 

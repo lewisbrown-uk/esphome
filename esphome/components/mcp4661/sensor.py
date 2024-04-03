@@ -36,6 +36,6 @@ async def to_code(config):
     await cg.register_component(var, config)
 
     cg.add(var.set_volatility(config[CONF_VOLATILE]))
-    cg.add(var.set_wiper(config[CONF_CHANNEL]))
+    cg.add(var.set_channel(config[CONF_CHANNEL]))
 
     cg.add(paren.register_channel(var))

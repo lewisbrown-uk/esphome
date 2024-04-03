@@ -11,7 +11,7 @@
 namespace esphome {
 namespace mcp4661 {
 
-enum MemoryAddress : unsigned char {
+enum MemoryAddress {
   VOLATILE_WIPER_0 = 0x00,
   VOLATILE_WIPER_1 = 0x01,
   NON_VOLATILE_WIPER_0 = 0x02,
@@ -20,7 +20,7 @@ enum MemoryAddress : unsigned char {
   STATUS_REG = 0X05,
 };
 
-enum Command : unsigned char {
+enum Command {
   READ = 0x00,
   INCREMENT = 0x01,
   DECREMENT = 0x02,

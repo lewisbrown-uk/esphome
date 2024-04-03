@@ -28,7 +28,7 @@ MemoryAddress MCP4661Component::calculate_memory_address(uint8_t wiper, bool is_
 
 uint8_t MCP4661Component::construct_command_byte(uint8_t wiper, bool is_volatile, Command command, uint16_t data) {
   MemoryAddress memory_address = this->calculate_memory_address(wiper, is_volatile);
-  uint8_t memory_address_byte = reinterpret_cast<uint8_t>(memory_address);
+  uint8_t memory_address_byte = static_cast<uint8_t>(memory_address);
   return (memory_address << 4) | (command << 2) | ((data & 0x1ff) >> 8);
 }
 

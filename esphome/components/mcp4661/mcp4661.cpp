@@ -47,7 +47,7 @@ void MCP4661SensorChannel::register_parent(MCP4661Component * parent) {
   this->set_parent(parent);
   this->wiper_step_size_ = parent->wiper_step_size_;
   this->wiper_value_max_ = parent->wiper_value_max_;
-  ESP_LOGD(TAG, "Registered output channel: %01u", c);
+  ESP_LOGD(TAG, "Registered sensor channel: %01u", c);
   if (c > parent->number_of_wipers_ - 1) {
     ESP_LOGW(TAG, "Channel number is out of range for this device");
   }
@@ -82,7 +82,13 @@ uint16_t MCP4661Component::get_wiper_value(MemoryAddress wiper_address) {
   return value;
 }
 
-void MCP4661Channel::update_wiper_address(void) { 
+void MCP4661SensorChannel::update_wiper_address(void) { 
+  this->wiper_address_ = MemoryAddress((this->is_volatile_?VOLATILE_WIPER_0:NON_VOLATILE_WIPER_0) + this->wiper_); 
+  ESP_LOGD(TAG, "Update wiper address to %02x, wiper = %01u, volatile = %01u",
+    this->wiper_address_, this->wiper_, this->is_volatile_);
+}
+
+void MCP4661OutputChannel::update_wiper_address(void) { 
   this->wiper_address_ = MemoryAddress((this->is_volatile_?VOLATILE_WIPER_0:NON_VOLATILE_WIPER_0) + this->wiper_); 
   ESP_LOGD(TAG, "Update wiper address to %02x, wiper = %01u, volatile = %01u",
     this->wiper_address_, this->wiper_, this->is_volatile_);

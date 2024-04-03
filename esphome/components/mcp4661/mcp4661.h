@@ -73,32 +73,33 @@ class MCP4661OutputChannel : public Component, public output::FloatOutput, publi
 };
 
 class MCP4661Component : public Component, public i2c::I2CDevice {
- public:
-  MCP4661Component() {}
 
-  void register_sensor_channel(MCP4661SensorChannel * channel) { channel->register_parent(this); } 
-  void register_output_channel(MCP4661OutputChannel * channel) { channel->register_parent(this); }
-
-  void set_number_of_bits(int bits) { number_of_bits_ = bits; }
-  void set_number_of_wipers(int wipers) { number_of_wipers_ = wipers; }
-
-  void setup() override;
-  void dump_config() override;
-
- protected:
-  friend class MCP4661Channel;
   friend class MCP4661OutputChannel;
   friend class MCP4661SensorChannel;
 
-  enum ErrorCode { NONE = 0, COMMUNICATION_FAILED } error_code_{NONE};
-  
-  void set_wiper_value(MemoryAddress wiper_address, uint16_t value);
-  uint16_t get_wiper_value(MemoryAddress wiper_address);
-  static uint8_t construct_command_byte(MemoryAddress memory_address, Command command, uint16_t data);
+  public:
+    MCP4661Component() {}
 
-  int number_of_bits_, number_of_wipers_;
-  float wiper_step_size_;
-  uint16_t wiper_value_max_;
+    void register_sensor_channel(MCP4661SensorChannel * channel) { channel->register_parent(this); } 
+    void register_output_channel(MCP4661OutputChannel * channel) { channel->register_parent(this); }
+
+    void set_number_of_bits(int bits) { number_of_bits_ = bits; }
+    void set_number_of_wipers(int wipers) { number_of_wipers_ = wipers; }
+
+    void setup() override;
+    void dump_config() override;
+
+  protected:
+
+    enum ErrorCode { NONE = 0, COMMUNICATION_FAILED } error_code_{NONE};
+    
+    void set_wiper_value(MemoryAddress wiper_address, uint16_t value);
+    uint16_t get_wiper_value(MemoryAddress wiper_address);
+    static uint8_t construct_command_byte(MemoryAddress memory_address, Command command, uint16_t data);
+
+    int number_of_bits_, number_of_wipers_;
+    float wiper_step_size_;
+    uint16_t wiper_value_max_;
 };
 
 }  // namespace mcp4661

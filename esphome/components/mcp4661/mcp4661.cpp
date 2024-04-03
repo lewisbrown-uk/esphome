@@ -114,7 +114,7 @@ MCP4661SensorChannel::MCP4661SensorChannel(MCP4661Component * parent) {
 
 void MCP4661SensorChannel::set_parent(MCP4661Component * parent) {
   this->parent_ = parent;
-  parent->register_output_channel(this);
+  parent->register_sensor_channel(this);
 }
 
 void MCP4661SensorChannel::update_wiper_address(void) { 

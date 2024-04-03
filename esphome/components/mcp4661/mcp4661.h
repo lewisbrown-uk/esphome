@@ -49,7 +49,7 @@ class MCP4661SensorChannel : public PollingComponent, public sensor::Sensor {
     MemoryAddress wiper_address_;
     uint16_t wiper_value_max_;
     float wiper_step_size_;
-    MCP4661Component * parent;
+    MCP4661Component * parent_;
 };
 
 class MCP4661OutputChannel : public Component, public output::FloatOutput {
@@ -71,7 +71,7 @@ class MCP4661OutputChannel : public Component, public output::FloatOutput {
     MemoryAddress wiper_address_;
     uint16_t wiper_value_max_;
     float wiper_step_size_;
-    MCP4661Component * parent;
+    MCP4661Component * parent_;
 };
 
 class MCP4661Component : public Component, public i2c::I2CDevice {

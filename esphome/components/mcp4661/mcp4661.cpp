@@ -44,12 +44,10 @@ void MCP4661Component::setup(void) {
 
 void MCP4661Component::register_channel(MCP4661Channel *channel) {
   auto c = channel->wiper_;
-  this->min_channel_ = std::min(this->min_channel_, c);
-  this->max_channel_ = std::max(this->max_channel_, c);
   channel->set_parent(this);
   channel->wiper_step_size_ = this->wiper_step_size_;
   channel->wiper_value_max_ = this->wiper_value_max_;
-  ESP_LOGD(TAG, "Registered channel: %01u", c);
+  ESP_LOGD(TAG, "Registered output channel: %01u", c);
   if (c > this->number_of_wipers_ - 1) {
     ESP_LOGW(TAG, "Channel number is out of range for this device");
   }
@@ -65,7 +63,14 @@ void MCP4661Component::set_wiper_value(MemoryAddress wiper_address, uint16_t wip
   this->write_byte(command_byte, data_byte);
 }
 
-void MCP4661OutputChannel::update_wiper_address(void) { 
+uint16_t MCP4661Component::get_wiper_value(MemoryAddress wiper_address) {
+  uint8_t command_byte = construct_command_byte(wiper_address, Command::READ, 0);
+  uint16_t value;
+
+  this->read_byte_16(command_byte, &value);
+}
+
+void MCP4661Channel::update_wiper_address(void) { 
   this->wiper_address_ = MemoryAddress((this->is_volatile_?VOLATILE_WIPER_0:NON_VOLATILE_WIPER_0) + this->wiper_); 
   ESP_LOGD(TAG, "Update wiper address to %02x, wiper = %01u, volatile = %01u",
     this->wiper_address_, this->wiper_, this->is_volatile_);

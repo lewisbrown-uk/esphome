@@ -9,13 +9,13 @@ from . import mcp4661_ns, MCP4661Component, CONF_MCP4661_ID, CONF_VOLATILE
 
 DEPENDENCIES = ["mcp4661"]
 
-MCP4661Sensor = mcp4661_ns.class_(
-    "MCP4661Sensor", sensor.Sensor, cg.PollingComponent, voltage_sampler.VoltageSampler
+MCP4661SensorChannel = mcp4661_ns.class_(
+    "MCP4661SensorChannel", sensor.Sensor, cg.PollingComponent
 )
 
 CONFIG_SCHEMA = (
     sensor.sensor_schema(
-        MCP4661Sensor,
+        MCP4661SensorChannel,
         accuracy_decimals=0,
     )
     .extend(
@@ -35,7 +35,7 @@ async def to_code(config):
     await sensor.register_sensor(var, config)
     await cg.register_component(var, config)
 
-    cg.add(var.set_multiplexer(config[CONF_VOLATILE]))
-    cg.add(var.set_gain(config[CONF_CHANNEL]))
+    cg.add(var.set_volatility(config[CONF_VOLATILE]))
+    cg.add(var.set_wiper(config[CONF_CHANNEL]))
 
-    cg.add(paren.register_sensor(var))
+    cg.add(paren.register_channel(var))

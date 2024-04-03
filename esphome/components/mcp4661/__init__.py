@@ -3,20 +3,23 @@ import esphome.config_validation as cv
 from esphome.components import i2c
 from esphome.const import CONF_ID
 
-AUTO_LOAD = ["output"]
+AUTO_LOAD = ["output", "sensor"]
 CODEOWNERS = ["@lewisbrown-uk"]
 DEPENDENCIES = ["i2c"]
 MULTI_CONF = True
 
 mcp4661_ns = cg.esphome_ns.namespace("mcp4661")
-MCP4661Output = mcp4661_ns.class_("MCP4661Output", cg.Component, i2c.I2CDevice)
+MCP4661Component = mcp4661_ns.class_("MCP4661Component", cg.Component, i2c.I2CDevice)
+
 CONF_BITS = "bits"
 CONF_WIPERS = "wipers"
+CONF_MCP4661_ID = "mcp4661_id"
+CONF_VOLATILE = "volatile"
 
 CONFIG_SCHEMA = (
     cv.Schema(
         {
-            cv.GenerateID(): cv.declare_id(MCP4661Output),
+            cv.GenerateID(): cv.declare_id(MCP4661Component),
             cv.Optional(CONF_BITS, default=8): cv.int_range(min=7, max=8),
             cv.Optional(CONF_WIPERS, default=2): cv.int_range(min=1, max=2),
         }

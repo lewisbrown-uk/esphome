@@ -2,16 +2,16 @@ import esphome.codegen as cg
 import esphome.config_validation as cv
 from esphome.components import output
 from esphome.const import CONF_CHANNEL, CONF_ID
-from . import MCP4661Output, mcp4661_ns
+from . import MCP4661Component, mcp4661_ns, CONF_MCP4661_ID
 
 DEPENDENCIES = ["mcp4661"]
 
-MCP4661Channel = mcp4661_ns.class_("MCP4661Channel", output.FloatOutput)
+MCP4661OutputChannel = mcp4661_ns.class_("MCP4661Channel", output.FloatOutput)
 
 CONFIG_SCHEMA = output.FLOAT_OUTPUT_SCHEMA.extend(
     {
-        cv.Required(CONF_ID): cv.declare_id(MCP4661Channel),
-        cv.GenerateID(CONF_MCP4661_ID): cv.use_id(MCP4661Output),
+        cv.Required(CONF_ID): cv.declare_id(MCP4661OutputChannel),
+        cv.GenerateID(CONF_MCP4661_ID): cv.use_id(MCP4661Component),
         cv.Required(CONF_CHANNEL): cv.int_range(min=0, max=1),
         cv.Optional(CONF_VOLATILE, default=True): cv.boolean
     }

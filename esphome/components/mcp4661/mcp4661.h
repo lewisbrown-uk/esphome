@@ -34,6 +34,7 @@ class MCP4661SensorChannel : public PollingComponent, public sensor::Sensor {
   friend class MCP4661Component;
 
   public:
+    MCP4661SensorChannel() {}
     MCP4661SensorChannel(MCP4661Component * parent);
     void set_channel(uint8_t wiper) { wiper_ = wiper; update_wiper_address(); }
     void set_volatility(bool is_volatile) { is_volatile_ = is_volatile; update_wiper_address(); }
@@ -57,6 +58,7 @@ class MCP4661OutputChannel : public Component, public output::FloatOutput {
   friend class MCP4661Component;
 
   public:
+    MCP4661OutputChannel() {}
     MCP4661OutputChannel(MCP4661Component * parent);
     void set_channel(uint8_t wiper) { wiper_ = wiper; update_wiper_address(); }
     void set_volatility(bool is_volatile) { is_volatile_ = is_volatile; update_wiper_address(); }

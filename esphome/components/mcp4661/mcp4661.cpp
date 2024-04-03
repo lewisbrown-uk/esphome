@@ -82,7 +82,7 @@ uint16_t MCP4661Component::get_wiper_value(MemoryAddress wiper_address) {
   return value;
 }
 
-void MCP4661OutputChannel::MCP4661OutputChannel(MCP4661Component * parent) {
+MCP4661OutputChannel::MCP4661OutputChannel(MCP4661Component * parent) {
   this->set_parent(parent);
 }
 
@@ -108,7 +108,7 @@ void MCP4661OutputChannel::write_state(float state) {
   // write state
   this->parent_->set_wiper_value(this->wiper_address_, wiper_value);
 }
-void MCP4661SensorChannel::MCP4661SensorChannel(MCP4661Component * parent) {
+MCP4661SensorChannel::MCP4661SensorChannel(MCP4661Component * parent) {
   this->set_parent(parent);
 }
 

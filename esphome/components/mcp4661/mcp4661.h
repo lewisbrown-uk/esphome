@@ -58,11 +58,11 @@ class MCP4661SensorChannel : public PollingComponent, public sensor::Sensor {
     void set_type(MCP4661SensorType type) { type_ = type; }
     void set_channel(uint8_t wiper) { wiper_ = wiper; }
     void set_volatility(bool is_volatile) { is_volatile_ = is_volatile; }
-    void set_location(MCP4661MemoryLocation location) { location_ = location; }
+    void set_location(uint8_t location) { location_ = location; }
     MCP4661SensorType get_type(void) { return type_; }
     uint8_t get_channel(void) { return wiper_; }
     bool get_volatility(void) { return is_volatile_; }
-    MCP4661MemoryLocation get_location(void) { return location_; }
+    uint8_t get_location(void) { return location_; }
     void update(void) override;
 
   protected:
@@ -108,7 +108,8 @@ class MCP4661Component : public Component, public i2c::I2CDevice {
   protected:
 
     MemoryAddress calculate_memory_address(uint8_t wiper, bool is_volatile);
-    uint8_t construct_command_byte(uint8_t wiper, bool is_volatile, Command command, uint16_t data);
+    uint8_t construct_command_byte(uint8_t memory_address, Command command, uint16_t data);
+    uint16_t get_memory_value(uint8_t memory_address);
     uint16_t get_wiper_value(uint8_t wiper, bool is_volatile);
     void set_wiper_value(uint8_t wiper, bool is_volatile, uint16_t value);
 

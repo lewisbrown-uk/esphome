@@ -68,6 +68,7 @@ uint16_t MCP4661Component::get_wiper_value(MemoryAddress wiper_address) {
   uint16_t value;
 
   this->read_byte_16(command_byte, &value);
+  return value;
 }
 
 void MCP4661Channel::update_wiper_address(void) { 

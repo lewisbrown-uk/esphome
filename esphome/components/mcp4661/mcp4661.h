@@ -42,7 +42,7 @@ class MCP4661SensorChannel : public PollingComponent, public sensor::Sensor, pub
 
   protected:
     void update_wiper_address(void);
-    void register_parent(MCP4661Component * parent) { parent->register_channel<MCP4661SensorChannel>(this); }
+    void register_parent(MCP4661Component * parent);
 
     uint8_t wiper_;
     bool is_volatile_;

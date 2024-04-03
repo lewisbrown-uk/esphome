@@ -34,23 +34,17 @@ class MCP4661SensorChannel : public PollingComponent, public sensor::Sensor {
   friend class MCP4661Component;
 
   public:
-    MCP4661SensorChannel() {}
-    MCP4661SensorChannel(MCP4661Component * parent);
-    void set_channel(uint8_t wiper) { wiper_ = wiper; update_wiper_address(); }
-    void set_volatility(bool is_volatile) { is_volatile_ = is_volatile; update_wiper_address(); }
+    MCP4661SensorChannel(MCP4661Component * parent) : parent_(parent) {}
+    void set_channel(uint8_t wiper) { wiper_ = wiper; }
+    void set_volatility(bool is_volatile) { is_volatile_ = is_volatile; }
     uint8_t get_channel(void) { return wiper_; }
     bool get_volatility(void) { return is_volatile_; }
     void update(void) override;
-    void set_parent(MCP4661Component * parent);
 
   protected:
-    void update_wiper_address(void);
 
-    uint8_t wiper_;
     bool is_volatile_;
-    MemoryAddress wiper_address_;
-    uint16_t wiper_value_max_;
-    float wiper_step_size_;
+    uint8_t wiper_;
     MCP4661Component * parent_;
 };
 
@@ -58,23 +52,17 @@ class MCP4661OutputChannel : public Component, public output::FloatOutput {
   friend class MCP4661Component;
 
   public:
-    MCP4661OutputChannel() {}
-    MCP4661OutputChannel(MCP4661Component * parent);
-    void set_channel(uint8_t wiper) { wiper_ = wiper; update_wiper_address(); }
-    void set_volatility(bool is_volatile) { is_volatile_ = is_volatile; update_wiper_address(); }
+    MCP4661OutputChannel(MCP4661Component * parent) : parent_(parent) {}
+    void set_channel(uint8_t wiper) { wiper_ = wiper; }
+    void set_volatility(bool is_volatile) { is_volatile_ = is_volatile; }
     uint8_t get_channel(void) { return wiper_; }
     bool get_volatility(void) { return is_volatile_; }
-    void set_parent(MCP4661Component * parent);
 
   protected:
     void write_state(float state) override;
-    void update_wiper_address(void);
 
-    uint8_t wiper_;
     bool is_volatile_;
-    MemoryAddress wiper_address_;
-    uint16_t wiper_value_max_;
-    float wiper_step_size_;
+    uint8_t wiper_;
     MCP4661Component * parent_;
 };
 
@@ -84,28 +72,28 @@ class MCP4661Component : public Component, public i2c::I2CDevice {
   friend class MCP4661SensorChannel;
 
   public:
-    MCP4661Component() {}
+    void register_sensor_channel(MCP4661SensorChannel * channel) { sensors_.push_back(channel); }
+    void register_output_channel(MCP4661OutputChannel * channel) { outputs_.push_back(channel); }
 
-    void register_sensor_channel(MCP4661SensorChannel * channel);
-    void register_output_channel(MCP4661OutputChannel * channel);
-
-    void set_number_of_bits(int bits) { number_of_bits_ = bits; }
-    void set_number_of_wipers(int wipers) { number_of_wipers_ = wipers; }
+    void set_number_of_bits(uint8_t bits) { number_of_bits_ = bits; }
+    void set_number_of_wipers(uint8_t wipers) { number_of_wipers_ = wipers; }
 
     void setup() override;
     void dump_config() override;
 
   protected:
 
-    enum ErrorCode { NONE = 0, COMMUNICATION_FAILED } error_code_{NONE};
-    
-    void set_wiper_value(MemoryAddress wiper_address, uint16_t value);
-    uint16_t get_wiper_value(MemoryAddress wiper_address);
-    static uint8_t construct_command_byte(MemoryAddress memory_address, Command command, uint16_t data);
+    static uint8_t calculate_memory_address(uint8_t wiper, bool is_volatile);
+    static uint8_t construct_command_byte(uint8_t wiper, bool is_volatile, Command command, uint16_t data);
+    uint16_t get_wiper_value(uint8_t wiper, bool is_volatile);
+    void set_wiper_value(uint8_t wiper, bool is_volatile, uint16_t value);
 
-    int number_of_bits_, number_of_wipers_;
     float wiper_step_size_;
+    uint8_t number_of_bits_, number_of_wipers_;
     uint16_t wiper_value_max_;
+
+    std::vector<MCP4661SensorChannel*> sensors_;
+    std::vector<MCP4661OutputChannel*> outputs_;
 };
 
 }  // namespace mcp4661

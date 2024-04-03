@@ -24,6 +24,6 @@ async def to_code(config):
     var = cg.new_Pvariable(config[CONF_ID])
     cg.add(var.set_channel(config[CONF_CHANNEL]))
     cg.add(var.set_volatility(config[CONF_VOLATILE]))
-    cg.add(paren.register_channel(var))
+    cg.add(paren.register_output_channel(var))
     await output.register_output(var, config)
     return var

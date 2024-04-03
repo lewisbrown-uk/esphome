@@ -83,8 +83,8 @@ class MCP4661Component : public Component, public i2c::I2CDevice {
 
   protected:
 
-    static uint8_t calculate_memory_address(uint8_t wiper, bool is_volatile);
-    static uint8_t construct_command_byte(uint8_t wiper, bool is_volatile, Command command, uint16_t data);
+    uint8_t calculate_memory_address(uint8_t wiper, bool is_volatile);
+    uint8_t construct_command_byte(uint8_t wiper, bool is_volatile, Command command, uint16_t data);
     uint16_t get_wiper_value(uint8_t wiper, bool is_volatile);
     void set_wiper_value(uint8_t wiper, bool is_volatile, uint16_t value);
 

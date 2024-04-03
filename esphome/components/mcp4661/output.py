@@ -24,7 +24,6 @@ async def to_code(config):
     paren = await cg.get_variable(config[CONF_MCP4661_ID])
     var = cg.new_Pvariable(config[CONF_ID], paren)
     await output.register_output(var, config)
-    await cg.register_component(var, config)
 
     cg.add(var.set_volatility(config[CONF_VOLATILE]))
     cg.add(var.set_channel(config[CONF_CHANNEL]))

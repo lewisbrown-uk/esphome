@@ -8,26 +8,26 @@ namespace mcp4661 {
 
 static const char *const TAG = "mcp4661";
 
-uint8_t MCP4661Component::calculate_wiper_address(uint8_t wiper, bool is_volatile) { 
+uint8_t MCP4661Component::calculate_memory_address(uint8_t wiper, bool is_volatile) { 
   const MemoryAddress volatile_addresses[] = { MemoryAddress::VOLATILE_WIPER_0, MemoryAddress::VOLATILE_WIPER_1 };
   const MemoryAddress non_volatile_addresses[] = { MemoryAddress::NON_VOLATILE_WIPER_0, MemoryAddress::NON_VOLATILE_WIPER_1 };
-  uint8_t wiper_address;
+  uint8_t memory_address;
 
   if (is_volatile) {
-    wiper_address = volatile_addresses[wiper];
+    memory_address = volatile_addresses[wiper];
   }
   else {
-    wiper_address = non_volatile_addresses[wiper];
+    memory_address = non_volatile_addresses[wiper];
   }
 
   ESP_LOGD(TAG, "Wiper address = %02x, wiper = %01u, volatile = %01u",
-    wiper_address, wiper, is_volatile);
+    memory_address, wiper, is_volatile);
   
-  return wiper_address;
+  return memory_address;
 }
 
 uint8_t MCP4661Component::construct_command_byte(uint8_t wiper, bool is_volatile, Command command, uint16_t data) {
-  memory_address = this->calculate_wiper_address(wiper, is_volatile);
+  MemoryAddress memory_address = this->calculate_wiper_address(wiper, is_volatile);
   return (memory_address << 4) | (command << 2) | ((data & 0x1ff) >> 8);
 }
 

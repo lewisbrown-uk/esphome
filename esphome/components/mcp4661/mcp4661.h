@@ -30,10 +30,11 @@ class MCP4661Component;
 // Ideally there would be an abstract subclass for both channel types but the Parented<> subclass
 // appears to make this impossible.
 
-class MCP4661SensorChannel : public PollingComponent, public sensor::Sensor, public Parented<MCP4661Component> {
+class MCP4661SensorChannel : public PollingComponent, public sensor::Sensor {
   friend class MCP4661Component;
 
   public:
+    MCP4661SensorChannel(MCP4661Component * parent) : parent_(parent) { parent->register_sensor_channel(this); }
     void set_channel(uint8_t wiper) { wiper_ = wiper; update_wiper_address(); }
     void set_volatility(bool is_volatile) { is_volatile_ = is_volatile; update_wiper_address(); }
     uint8_t get_channel(void) { return wiper_; }
@@ -42,19 +43,20 @@ class MCP4661SensorChannel : public PollingComponent, public sensor::Sensor, pub
 
   protected:
     void update_wiper_address(void);
-    void register_parent(MCP4661Component * parent);
 
     uint8_t wiper_;
     bool is_volatile_;
     MemoryAddress wiper_address_;
     uint16_t wiper_value_max_;
     float wiper_step_size_;
+    MCP4661Component * parent;
 };
 
-class MCP4661OutputChannel : public Component, public output::FloatOutput, public Parented<MCP4661Component> {
+class MCP4661OutputChannel : public Component, public output::FloatOutput {
   friend class MCP4661Component;
 
   public:
+    MCP4661OutputChannel(MCP4661Component * parent) : parent_(parent) { parent->register_output_channel(this); }
     void set_channel(uint8_t wiper) { wiper_ = wiper; update_wiper_address(); }
     void set_volatility(bool is_volatile) { is_volatile_ = is_volatile; update_wiper_address(); }
     uint8_t get_channel(void) { return wiper_; }
@@ -63,13 +65,13 @@ class MCP4661OutputChannel : public Component, public output::FloatOutput, publi
   protected:
     void write_state(float state) override;
     void update_wiper_address(void);
-    void register_parent(MCP4661Component * parent);
 
     uint8_t wiper_;
     bool is_volatile_;
     MemoryAddress wiper_address_;
     uint16_t wiper_value_max_;
     float wiper_step_size_;
+    MCP4661Component * parent;
 };
 
 class MCP4661Component : public Component, public i2c::I2CDevice {
@@ -80,8 +82,8 @@ class MCP4661Component : public Component, public i2c::I2CDevice {
   public:
     MCP4661Component() {}
 
-    void register_sensor_channel(MCP4661SensorChannel * channel) { channel->register_parent(this); } 
-    void register_output_channel(MCP4661OutputChannel * channel) { channel->register_parent(this); }
+    void register_sensor_channel(MCP4661SensorChannel * channel);
+    void register_output_channel(MCP4661OutputChannel * channel);
 
     void set_number_of_bits(int bits) { number_of_bits_ = bits; }
     void set_number_of_wipers(int wipers) { number_of_wipers_ = wipers; }

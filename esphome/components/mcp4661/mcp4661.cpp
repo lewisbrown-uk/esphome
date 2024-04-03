@@ -42,24 +42,24 @@ void MCP4661Component::setup(void) {
   }
 }
 
-void MCP4661SensorChannel::register_parent(MCP4661Component * parent) {
-  auto c = this->wiper_;
-  this->set_parent(parent);
-  this->wiper_step_size_ = parent->wiper_step_size_;
-  this->wiper_value_max_ = parent->wiper_value_max_;
+void MCP4661Component::register_output_channel(MCP4661OutputChannel * channel) {
+  auto c = channel->wiper_;
+  channel->set_parent(this);
+  channel->wiper_step_size_ = this->wiper_step_size_;
+  channel->wiper_value_max_ = this->wiper_value_max_;
   ESP_LOGD(TAG, "Registered sensor channel: %01u", c);
-  if (c > parent->number_of_wipers_ - 1) {
+  if (c > this->number_of_wipers_ - 1) {
     ESP_LOGW(TAG, "Channel number is out of range for this device");
   }
 }
 
-void MCP4661OutputChannel::register_parent(MCP4661Component * parent) {
-  auto c = this->wiper_;
-  this->set_parent(parent);
-  this->wiper_step_size_ = parent->wiper_step_size_;
-  this->wiper_value_max_ = parent->wiper_value_max_;
-  ESP_LOGD(TAG, "Registered output channel: %01u", c);
-  if (c > parent->number_of_wipers_ - 1) {
+void MCP4661Component::register_sensor_channel(MCP4661SensorChannel * channel) {
+  auto c = channel->wiper_;
+  channel->set_parent(this);
+  channel->wiper_step_size_ = this->wiper_step_size_;
+  channel->wiper_value_max_ = this->wiper_value_max_;
+  ESP_LOGD(TAG, "Registered sensor channel: %01u", c);
+  if (c > this->number_of_wipers_ - 1) {
     ESP_LOGW(TAG, "Channel number is out of range for this device");
   }
 }

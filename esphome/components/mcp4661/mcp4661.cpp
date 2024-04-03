@@ -82,10 +82,13 @@ uint16_t MCP4661Component::get_wiper_value(MemoryAddress wiper_address) {
   return value;
 }
 
-void MCP4661SensorChannel::update_wiper_address(void) { 
-  this->wiper_address_ = MemoryAddress((this->is_volatile_?VOLATILE_WIPER_0:NON_VOLATILE_WIPER_0) + this->wiper_); 
-  ESP_LOGD(TAG, "Update wiper address to %02x, wiper = %01u, volatile = %01u",
-    this->wiper_address_, this->wiper_, this->is_volatile_);
+void MCP4661OutputChannel::MCP4661OutputChannel(MCP4661Component * parent) {
+  this->set_parent(parent);
+}
+
+void MCP4661OutputChannel::set_parent(MCP4661Component * parent) {
+  parent_ = parent;
+  parent->register_output_channel(parent);
 }
 
 void MCP4661OutputChannel::update_wiper_address(void) { 
@@ -104,6 +107,20 @@ void MCP4661OutputChannel::write_state(float state) {
   ESP_LOGD(TAG, "state = %f wiper_value = %02x", state, wiper_value);
   // write state
   this->parent_->set_wiper_value(this->wiper_address_, wiper_value);
+}
+void MCP4661SensorChannel::MCP4661SensorChannel(MCP4661Component * parent) {
+  this->set_parent(parent);
+}
+
+void MCP4661SensorChannel::set_parent(MCP4661Component * parent) {
+  parent_ = parent;
+  parent->register_output_channel(parent);
+}
+
+void MCP4661SensorChannel::update_wiper_address(void) { 
+  this->wiper_address_ = MemoryAddress((this->is_volatile_?VOLATILE_WIPER_0:NON_VOLATILE_WIPER_0) + this->wiper_); 
+  ESP_LOGD(TAG, "Update wiper address to %02x, wiper = %01u, volatile = %01u",
+    this->wiper_address_, this->wiper_, this->is_volatile_);
 }
 
 void MCP4661SensorChannel::update(void) {

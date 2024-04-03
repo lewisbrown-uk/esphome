@@ -29,9 +29,9 @@ class MCP4661Component;
 
 class MCP4661Channel : public Parented<MCP4661Component> {
   public:
-    void set_wiper(uint8_t wiper) { wiper_ = wiper; update_wiper_address(); }
+    void set_channel(uint8_t wiper) { wiper_ = wiper; update_wiper_address(); }
     void set_volatility(bool is_volatile) { is_volatile_ = is_volatile; update_wiper_address(); }
-    uint8_t get_wiper(void) { return wiper_; }
+    uint8_t get_channel(void) { return wiper_; }
     bool get_volatility(void) { return is_volatile_; }
 
   protected:

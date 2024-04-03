@@ -8,6 +8,14 @@ namespace mcp4661 {
 
 static const char *const TAG = "mcp4661";
 
+/**
+ * Calculate memory address based on wiper index and volatility.
+ * 
+ * @param[in] wiper The wiper index
+ * @param[in] is_volatile Indicates whether to address the volatile or non-volatile wiper
+ * 
+ */
+
 MemoryAddress MCP4661Component::calculate_memory_address(uint8_t wiper, bool is_volatile) { 
   const MemoryAddress volatile_addresses[] = { MemoryAddress::VOLATILE_WIPER_0, MemoryAddress::VOLATILE_WIPER_1 };
   const MemoryAddress non_volatile_addresses[] = { MemoryAddress::NON_VOLATILE_WIPER_0, MemoryAddress::NON_VOLATILE_WIPER_1 };
@@ -26,9 +34,30 @@ MemoryAddress MCP4661Component::calculate_memory_address(uint8_t wiper, bool is_
   return memory_address;
 }
 
+/**
+ * Construct the command byte for I2C transactions.
+ * 
+ * @param[in] memory_address The memory address to read or write
+ * @param[in] command The command (write = 0, read = 3)
+ * @param[in] data The data for the write command, ignored for other commands
+ * 
+ * The format of the command byte is AAAACCxD where:
+ * 
+ *    A = address bit
+ *    C = command bit
+ *    D = bit 8 of data
+ */
+
 uint8_t MCP4661Component::construct_command_byte(uint8_t memory_address, Command command, uint16_t data) {
-  return (memory_address << 4) | (command << 2) | ((data & 0x1ff) >> 8);
+  if ( command == Command::WRITE )
+    return (memory_address << 4) | (command << 2) | ((data & 0x1ff) >> 8);
+  else
+    return (memory_address << 4) | (command << 2);
 }
+
+/**
+ * Dump configuration.
+ */
 
 void MCP4661Component::dump_config(void) {
   // dump config
@@ -36,10 +65,7 @@ void MCP4661Component::dump_config(void) {
 
   LOG_I2C_DEVICE(this);
 
-  ESP_LOGCONFIG(TAG, "bits = %01u, wiper_step_size = %f, wiper_value_max = %01u", 
-    this->number_of_bits_, 
-    this->wiper_step_size_,
-    this->wiper_value_max_);
+  ESP_LOGCONFIG(TAG, "bits = %01u, wiper_value_max = %01u", this->number_of_bits_, this->wiper_value_max_);
   ESP_LOGCONFIG(TAG, "wiper channels = %01u", this->number_of_wipers_);
 /*
   for (auto *sensor : this->sensors_) {
@@ -55,18 +81,20 @@ void MCP4661Component::dump_config(void) {
   }*/
 }
 
+/**
+ * Set up the MCP4661 component. No hardware setup is required.
+ */
+
 void MCP4661Component::setup(void) {
   ESP_LOGCONFIG(TAG, "Setting up MCP4661");
   // set up the MCP4661
   if ( this->number_of_bits_ == 8 )  
   {
-    this->wiper_step_size_ = 1.0/256.0;
-    this->wiper_value_max_ = 0x100;
+    this->wiper_value_max_ = 256.0;
   }
   else if ( this->number_of_bits_ == 7 )
   {
-    this->wiper_step_size_ = 1.0/128.0;
-    this->wiper_value_max_ = 0x80;
+    this->wiper_value_max_ = 128.0;
   }
   else
   {
@@ -86,8 +114,8 @@ void MCP4661Component::setup(void) {
  * 
  * Host: [address|write] [command byte] [data byte]
  * 
- * where [command byte] contains the memory address to write in the high 4 bits, the command (0=write) in bits 2-3 
- * and the high bit of the 9-bit value to set in bit 0. [data byte] contains the bottom 8 bits of the value.
+ * where [command byte] contains the memory address to write in the high 4 bits, the command (0=write) in bits 2-3, 
+ * and the high bit of the 9-bit data value in bit 0. [data byte] contains the bottom 8 bits of the value.
  */
 
 void MCP4661Component::set_wiper_value(uint8_t wiper, bool is_volatile, uint16_t wiper_value) {
@@ -121,11 +149,13 @@ void MCP4661Component::set_wiper_value(uint8_t wiper, bool is_volatile, uint16_t
 
 uint16_t MCP4661Component::get_memory_value(uint8_t location) {
   uint8_t command_byte = construct_command_byte(location, Command::READ, 0);
+  uint8_t bytes[2];
   uint16_t value;
 
   // Send the command byte without a stop bit
   this->write(&command_byte, 1, false);
-  this->read(reinterpret_cast<uint8_t*>(&value), 2);
+  this->read(bytes, 2);
+  value = (bytes[0]<<8) | bytes[1];
   ESP_LOGD(TAG, "location %u command %02x value = %04x", location, command_byte, value);
   return value;
 }
@@ -160,7 +190,7 @@ void MCP4661OutputChannel::write_state(float state) {
   {
     wiper_value = this->parent_->wiper_value_max_;
   }
-  wiper_value = uint16_t(state / this->parent_->wiper_step_size_);
+  wiper_value = uint16_t(state * this->parent_->wiper_value_max_);
   ESP_LOGD(TAG, "state = %f wiper_value = %02x", state, wiper_value);
   // write state
   this->parent_->set_wiper_value(this->wiper_, this->is_volatile_, wiper_value);
@@ -173,7 +203,7 @@ void MCP4661OutputChannel::write_state(float state) {
 void MCP4661SensorChannel::update(void) {
   if ( this->type_ == MCP4661SensorType::WIPER ) {
     uint16_t wiper_value = this->parent_->get_wiper_value(this->wiper_, this->is_volatile_);
-    this->publish_state(wiper_value);
+    this->publish_state(float(wiper_value) / this->parent_->wiper_max_value_);
   }
   else if ( this->type_ == MCP4661SensorType::MEMORY ) {
     uint16_t memory_value = this->parent_->get_memory_value(this->location_);

@@ -31,8 +31,9 @@ MEMORY_LOCATION = {
     "DATA_10" : MCP4661MemoryLocation.DATA_10,
 }
 
+# accuracy_decimals = 3 because 1/256.0 = 0.00390625 so 3 decimals are required for precision
 CONFIG_SCHEMA = (
-    sensor.sensor_schema(MCP4661SensorChannel, accuracy_decimals=0).extend(
+    sensor.sensor_schema(MCP4661SensorChannel, accuracy_decimals=3).extend(
         {
             cv.GenerateID(CONF_MCP4661_ID): cv.use_id(MCP4661Component),
             cv.Required(CONF_TYPE): cv.enum(SENSOR_TYPE, upper=True),

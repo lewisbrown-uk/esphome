@@ -113,9 +113,8 @@ class MCP4661Component : public Component, public i2c::I2CDevice {
     uint16_t get_wiper_value(uint8_t wiper, bool is_volatile);
     void set_wiper_value(uint8_t wiper, bool is_volatile, uint16_t value);
 
-    float wiper_step_size_;
+    float wiper_value_max_;
     uint8_t number_of_bits_, number_of_wipers_;
-    uint16_t wiper_value_max_;
 
     std::vector<MCP4661SensorChannel*> sensors_;
     std::vector<MCP4661OutputChannel*> outputs_;

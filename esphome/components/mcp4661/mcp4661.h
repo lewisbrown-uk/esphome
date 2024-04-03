@@ -29,9 +29,6 @@ class MCP4661Component;
 
 class MCP4661Channel {
   public:
-    // Make this class polymorphic
-    virtual ~MCP4661Channel() = default;
-
     void set_channel(uint8_t wiper) { wiper_ = wiper; update_wiper_address(); }
     void set_volatility(bool is_volatile) { is_volatile_ = is_volatile; update_wiper_address(); }
     uint8_t get_channel(void) { return wiper_; }
@@ -39,7 +36,10 @@ class MCP4661Channel {
 
   protected:
     friend class MCP4661Component;
-    void update_wiper_address(void); 
+    void update_wiper_address(void);
+
+    // This is necessary because we don't have RTTI 
+    virtual Parented<MCP4661Component> * get_parented_ptr() = 0;
 
   uint8_t wiper_;
   bool is_volatile_;
@@ -51,11 +51,15 @@ class MCP4661Channel {
 class MCP4661SensorChannel : public MCP4661Channel, public PollingComponent, public sensor::Sensor, public Parented<MCP4661Component> {
   public:
     void update(void) override;
+  
+  protected:
+    Parented<MCP4661Component> * get_parented_ptr() { return static_cast<Parented<MCP4661Component> *> this; }
 };
 
 class MCP4661OutputChannel : public MCP4661Channel, public Component, public output::FloatOutput, public Parented<MCP4661Component> {
- protected:
-  void write_state(float state) override;
+  protected:
+    void write_state(float state) override;
+    Parented<MCP4661Component> * get_parented_ptr() { return static_cast<Parented<MCP4661Component> *> this; }
 };
 
 class MCP4661Component : public Component, public i2c::I2CDevice {

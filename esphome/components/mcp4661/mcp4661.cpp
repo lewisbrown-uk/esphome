@@ -44,9 +44,9 @@ void MCP4661Component::setup(void) {
 
 void MCP4661Component::register_channel(MCP4661Channel *channel) {
   auto c = channel->wiper_;
-  // Cast to Parented<> type - necessary because the Parented<> base class needs to be on the
+  // "Cast" to Parented<> type - necessary because the Parented<> base class needs to be on the
   // derived sub-class in order to provide relevant implicit constructors on it.
-  Parented<MCP4661Component> *parented = static_cast<Parented<MCP4661Component>*>(channel);
+  Parented<MCP4661Component> *parented = channel->get_parented_ptr();
   parented->set_parent(this);
   channel->wiper_step_size_ = this->wiper_step_size_;
   channel->wiper_value_max_ = this->wiper_value_max_;

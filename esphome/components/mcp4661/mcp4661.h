@@ -95,7 +95,7 @@ class MCP4661Component : public Component, public i2c::I2CDevice {
   void set_wiper_value(MemoryAddress wiper_address, uint16_t value);
   uint16_t get_wiper_value(MemoryAddress wiper_address);
   static uint8_t construct_command_byte(MemoryAddress memory_address, Command command, uint16_t data);
-  void register_channel<T>(T * channel);
+  template<T> void register_channel(T * channel);
 
   int number_of_bits_, number_of_wipers_;
   float wiper_step_size_;

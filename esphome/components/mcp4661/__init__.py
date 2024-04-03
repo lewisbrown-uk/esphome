@@ -12,9 +12,10 @@ mcp4661_ns = cg.esphome_ns.namespace("mcp4661")
 MCP4661Component = mcp4661_ns.class_("MCP4661Component", cg.Component, i2c.I2CDevice)
 
 CONF_BITS = "bits"
-CONF_WIPERS = "wipers"
+CONF_LOCATION = "location"
 CONF_MCP4661_ID = "mcp4661_id"
 CONF_VOLATILE = "volatile"
+CONF_WIPERS = "wipers"
 
 CONFIG_SCHEMA = (
     cv.Schema(

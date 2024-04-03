@@ -1,8 +1,8 @@
 import esphome.codegen as cg
 import esphome.config_validation as cv
 from esphome.components import sensor, voltage_sampler
-from esphome.const import CONF_CHANNEL, CONF_ID, CONF_TYPE, CONF_LOCATION
-from . import MCP4661Component, mcp4661_ns, CONF_MCP4661_ID, CONF_VOLATILE
+from esphome.const import CONF_CHANNEL, CONF_ID, CONF_TYPE
+from . import MCP4661Component, mcp4661_ns, CONF_MCP4661_ID, CONF_VOLATILE, CONF_LOCATION
 
 DEPENDENCIES = ["mcp4661"]
 

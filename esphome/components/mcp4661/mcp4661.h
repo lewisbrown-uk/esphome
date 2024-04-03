@@ -50,7 +50,7 @@ class MCP4661SensorChannel : public MCP4661Channel, public PollingComponent, pub
     void update(void) override;
 };
 
-class MCP4661OutputChannel : pubic MCP4661Channel, public Component, public output::FloatOutput {
+class MCP4661OutputChannel : public MCP4661Channel, public Component, public output::FloatOutput {
  protected:
   void write_state(float state) override;
 };

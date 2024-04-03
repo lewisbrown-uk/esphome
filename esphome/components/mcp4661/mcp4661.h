@@ -29,6 +29,9 @@ class MCP4661Component;
 
 class MCP4661Channel {
   public:
+    // Make this class polymorphic
+    virtual ~MCP4661Channel() = default;
+
     void set_channel(uint8_t wiper) { wiper_ = wiper; update_wiper_address(); }
     void set_volatility(bool is_volatile) { is_volatile_ = is_volatile; update_wiper_address(); }
     uint8_t get_channel(void) { return wiper_; }

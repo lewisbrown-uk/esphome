@@ -125,7 +125,7 @@ uint16_t MCP4661Component::get_memory_value(uint8_t location) {
 
   // Send the command byte without a stop bit
   this->write(&command_byte, 1, false);
-  this->read(&value, 2);
+  this->read(reinterpret_cast<uint8_t*>(&value), 2);
   ESP_LOGD(TAG, "location %u command %02x value = %04x", location, command_byte, value);
   return value;
 }

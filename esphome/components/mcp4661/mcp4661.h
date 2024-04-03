@@ -43,7 +43,7 @@ class MCP4661Channel : public Parented<MCP4661Component> {
   MemoryAddress wiper_address_;
   uint16_t wiper_value_max_;
   float wiper_step_size_;
-}
+};
 
 class MCP4661SensorChannel : public MCP4661Channel, public PollingComponent, public sensor::Sensor {
   public:

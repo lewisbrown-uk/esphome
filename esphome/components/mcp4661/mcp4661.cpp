@@ -89,8 +89,7 @@ void MCP4661OutputChannel::write_state(float state) {
 }
 
 void MCP4661SensorChannel::update(void) {
-  uint16_t wiper_value;
-  wiper_value = this->parent_->get_wiper_value(this->wiper_address_, wiper_value);
+  uint16_t wiper_value = this->parent_->get_wiper_value(this->wiper_address_);
   this->publish_state(wiper_value);
 }
 

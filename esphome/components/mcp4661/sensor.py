@@ -35,10 +35,10 @@ CONFIG_SCHEMA = (
     sensor.sensor_schema(MCP4661SensorChannel, accuracy_decimals=0).extend(
         {
             cv.GenerateID(CONF_MCP4661_ID): cv.use_id(MCP4661Component),
-            cv.Required(CONF_TYPE): cv.enum(SENSOR_TYPE, upper=False),
+            cv.Required(CONF_TYPE): cv.enum(SENSOR_TYPE, upper=True),
             cv.Optional(CONF_VOLATILE, default=True): cv.boolean,
             cv.Optional(CONF_CHANNEL, default=0): cv.int_range(min=0, max=1),
-            cv.Optional(CONF_LOCATION, default=0): cv.enum(MEMORY_LOCATION, upper=False, space="_"),
+            cv.Optional(CONF_LOCATION, default=STATUS): cv.enum(MEMORY_LOCATION, upper=True, space="_"),
         }
     )
     .extend(cv.polling_component_schema("1s"))

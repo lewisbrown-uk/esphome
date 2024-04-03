@@ -16,15 +16,33 @@ enum MemoryAddress {
   VOLATILE_WIPER_1 = 0x01,
   NON_VOLATILE_WIPER_0 = 0x02,
   NON_VOLATILE_WIPER_1 = 0x03,
-  VOLATILE_TCON_REG = 0X04,
-  STATUS_REG = 0X05,
 };
 
 enum Command {
-  READ = 0x00,
+  WRITE = 0x00,
   INCREMENT = 0x01,
   DECREMENT = 0x02,
-  WRITE = 0x03,
+  READ = 0x03,
+};
+
+enum MCP4661SensorType {
+  WIPER,
+  MEMORY,
+};
+
+enum MCP4661MemoryLocation {
+  TCON = 0x04,
+  STATUS = 0x05,
+  DATA_0 = 0x06,
+  DATA_1 = 0x07,
+  DATA_2 = 0x08,
+  DATA_3 = 0x09,
+  DATA_4 = 0x0A,
+  DATA_5 = 0x0B,
+  DATA_6 = 0x0C,
+  DATA_7 = 0x0D,
+  DATA_8 = 0x0E,
+  DATA_9 = 0x0F,
 };
 
 class MCP4661Component;
@@ -37,16 +55,20 @@ class MCP4661SensorChannel : public PollingComponent, public sensor::Sensor {
 
   public:
     MCP4661SensorChannel(MCP4661Component * parent) : parent_(parent) {}
+    void set_type(MCP4661SensorType type) { type_ = type; }
     void set_channel(uint8_t wiper) { wiper_ = wiper; }
     void set_volatility(bool is_volatile) { is_volatile_ = is_volatile; }
+    void set_location(MCP4661MemoryLocation location) { location_ = location; }
+    MCP4661SensorType get_type(void) { return type_; }
     uint8_t get_channel(void) { return wiper_; }
     bool get_volatility(void) { return is_volatile_; }
+    MCP4661MemoryLocation get_location(void) { return location_; }
     void update(void) override;
 
   protected:
-
+    MCP4661SensorType type_;
     bool is_volatile_;
-    uint8_t wiper_;
+    uint8_t wiper_, location_;
     MCP4661Component * parent_;
 };
 

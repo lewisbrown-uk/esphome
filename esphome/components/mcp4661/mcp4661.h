@@ -74,7 +74,6 @@ class MCP4661Component : public Component, public i2c::I2CDevice {
 
   enum ErrorCode { NONE = 0, COMMUNICATION_FAILED } error_code_{NONE};
   
-  uint8_t get_wiper_value(MemoryAddress wiper_address, uint16_t value);
   void set_wiper_value(MemoryAddress wiper_address, uint16_t value);
   uint16_t get_wiper_value(MemoryAddress wiper_address);
   static uint8_t construct_command_byte(MemoryAddress memory_address, Command command, uint16_t data);

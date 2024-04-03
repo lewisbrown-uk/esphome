@@ -2,7 +2,7 @@ import esphome.codegen as cg
 import esphome.config_validation as cv
 from esphome.components import output
 from esphome.const import CONF_CHANNEL, CONF_ID
-from . import MCP4661Component, mcp4661_ns, CONF_MCP4661_ID
+from . import MCP4661Component, mcp4661_ns, CONF_MCP4661_ID, CONF_VOLATILE
 
 DEPENDENCIES = ["mcp4661"]
 

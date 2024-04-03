@@ -27,7 +27,7 @@ uint8_t MCP4661Component::calculate_memory_address(uint8_t wiper, bool is_volati
 }
 
 uint8_t MCP4661Component::construct_command_byte(uint8_t wiper, bool is_volatile, Command command, uint16_t data) {
-  MemoryAddress memory_address = this->calculate_wiper_address(wiper, is_volatile);
+  MemoryAddress memory_address = this->calculate_memory_address(wiper, is_volatile);
   return (memory_address << 4) | (command << 2) | ((data & 0x1ff) >> 8);
 }
 
@@ -39,13 +39,13 @@ void MCP4661Component::dump_config(void) {
     this->wiper_value_max_);
   ESP_LOGCONFIG(TAG, "wiper channels = %01u", this->number_of_wipers_);
 
-  for (auto sensor : this->sensors_) {
+  for (auto *sensor: this->sensors_) {
     LOG_SENSOR("  ", "SENSOR", sensor);
     ESP_LOGCONFIG(TAG, "    channel: %u", sensor->get_channel());
     ESP_LOGCONFIG(TAG, "    volatile: %u", sensor->get_volatility());
   }
 
-  for (auto output : this->outputs_) {
+  for (auto *output : this->outputs_) {
     ESP_LOGCONFIG(TAG, "MCP4661 output");
     ESP_LOGCONFIG(TAG, "    channel: %u", sensor->get_channel());
     ESP_LOGCONFIG(TAG, "    volatile: %u", sensor->get_volatility());

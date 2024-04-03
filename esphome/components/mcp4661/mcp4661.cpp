@@ -42,12 +42,9 @@ void MCP4661Component::setup(void) {
   }
 }
 
-void MCP4661Component::register_channel(MCP4661Channel *channel) {
-  auto c = channel->wiper_;
-  // "Cast" to Parented<> type - necessary because the Parented<> base class needs to be on the
-  // derived sub-class in order to provide relevant implicit constructors on it.
-  Parented<MCP4661Component> *parented = channel->get_parented_ptr();
-  parented->set_parent(this);
+void MCP4661Component::register_channel<T>(T * channel) {
+  auto c = channel->get_channel();
+  channel->set_parent(this);
   channel->wiper_step_size_ = this->wiper_step_size_;
   channel->wiper_value_max_ = this->wiper_value_max_;
   ESP_LOGD(TAG, "Registered output channel: %01u", c);
